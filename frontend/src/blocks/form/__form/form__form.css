@@ -1,0 +1,16 @@
+.form__form {
+    all: unset;
+    padding: 75px 0 25px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 18px;
+    margin: 0 22px;
+}
+
+@media screen and (min-width: 458px) {
+    .form__form {
+        margin: 0 36px;
+        padding: 45px 0 37px;
+    }
+}
+

@@ -1,0 +1,10 @@
+.entrance__form-input {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #ccc;
+    margin: 0;
+    font-size: 14px;
+    line-height: 17px;
+}
