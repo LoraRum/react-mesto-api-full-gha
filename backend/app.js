@@ -14,7 +14,7 @@ const { validateLogin, validateCreateUser } = require('./middlewares/validation'
 const { BadRequest, NotFound } = require('./errors/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 const db = mongoose.connection;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
