@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const BodyParser = require('body-parser');
@@ -34,6 +35,12 @@ db.once('open', () => {
   app.all(['/users*', '/cards*'], auth);
 
   app.use(requestLogger);
+
+  app.get('/crash-test', () => {
+    setTimeout(() => {
+      throw new Error('Сервер сейчас упадёт');
+    }, 0);
+  });
 
   app.post('/signin', validateLogin, login);
   app.post('/signup', validateCreateUser, createUser);
