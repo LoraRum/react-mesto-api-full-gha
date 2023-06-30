@@ -14,7 +14,7 @@ module.exports.getAllCards = async (req, res, next) => {
 
 module.exports.createCard = async (req, res, next) => {
   try {
-    const newCard = await Card.create({ ...req.body, owner: req.user._id })
+    const newCard = await Card.create({ ...req.body, owner: req.user._id });
     const card = await Card.findById(newCard._id).populate(['owner', 'likes']);
 
     res.status(201).send(card);
