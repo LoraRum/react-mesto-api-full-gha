@@ -19,7 +19,12 @@ module.exports.createCard = async (req, res, next) => {
 
     res.status(201).send(card);
   } catch (err) {
-    next(err);
+    if (err.name === 'ValidationError') {
+      const errorMessage = err.message;
+      next(new BadRequest(errorMessage));
+    } else {
+      next(err);
+    }
   }
 };
 
@@ -64,7 +69,11 @@ module.exports.likeCard = async (req, res, next) => {
       res.send(card);
     }
   } catch (err) {
-    next(err);
+    if (err.name === 'CastError') {
+      next(new BadRequest('Invalid card ID'));
+    } else {
+      next(err);
+    }
   }
 };
 
@@ -82,6 +91,10 @@ module.exports.dislikeCard = async (req, res, next) => {
       res.send(card);
     }
   } catch (err) {
-    next(err);
+    if (err.name === 'CastError') {
+      next(new BadRequest('Invalid card ID'));
+    } else {
+      next(err);
+    }
   }
 };
