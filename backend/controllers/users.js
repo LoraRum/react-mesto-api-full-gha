@@ -26,7 +26,11 @@ module.exports.getUserById = async (req, res, next) => {
       next(new NotFound('User not found'));
     }
   } catch (err) {
-    next(err);
+    if (err.name === 'CastError') {
+      next(new BadRequest('Invalid user ID'));
+    } else {
+      next(err);
+    }
   }
 };
 
@@ -60,9 +64,11 @@ module.exports.createUser = async (req, res, next) => {
 
 module.exports.updateProfile = async (req, res, next) => {
   try {
+    const { name, about } = req.body;
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: req.body },
+      { $set: { name, about } },
       { new: true, runValidators: true },
     );
 
@@ -72,7 +78,11 @@ module.exports.updateProfile = async (req, res, next) => {
       next(new NotFound('User not found'));
     }
   } catch (err) {
-    next(err);
+    if (err.name === 'ValidationError') {
+      next(new BadRequest('Incorrect data passed during profile update'));
+    } else {
+      next(err);
+    }
   }
 };
 
@@ -90,7 +100,11 @@ module.exports.updateAvatar = async (req, res, next) => {
       next(new NotFound('User not found'));
     }
   } catch (err) {
-    next(err);
+    if (err.name === 'ValidationError') {
+      next(new BadRequest('Incorrect data passed during profile update'));
+    } else {
+      next(err);
+    }
   }
 };
 
