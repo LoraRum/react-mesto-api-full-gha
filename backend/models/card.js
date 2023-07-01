@@ -10,6 +10,13 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator(value) {
+        const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+        return urlRegex.test(value);
+      },
+      message: 'Invalid link format',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
