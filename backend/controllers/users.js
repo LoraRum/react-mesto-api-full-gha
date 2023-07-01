@@ -48,13 +48,18 @@ module.exports.createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-    delete newUser.password;
-    res.status(201).json({ data: newUser });
+    const user = newUser.toObject({ useProjection: true });
+
+    res.status(201).json({ data: user });
   } catch (error) {
     if (error.name === 'ValidationError') {
       next(new BadRequest('Incorrect data passed during user creation'));
     } else if (error.name === 'MongoServerError') {
-      next(new ConflictError('When registering, an email is specified that already exists on the server'));
+      next(
+        new ConflictError(
+          'When registering, an email is specified that already exists on the server',
+        ),
+      );
     } else {
       next(error);
     }
