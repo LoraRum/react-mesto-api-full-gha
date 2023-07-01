@@ -48,9 +48,8 @@ module.exports.createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-
-    const user = await User.findById(newUser._id);
-    res.status(201).json({ data: user });
+    delete newUser.password;
+    res.status(201).json({ data: newUser });
   } catch (error) {
     if (error.name === 'ValidationError') {
       next(new BadRequest('Incorrect data passed during user creation'));

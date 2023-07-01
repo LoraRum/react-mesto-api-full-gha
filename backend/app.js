@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const BodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
@@ -11,7 +10,7 @@ const auth = require('./middlewares/auth');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { validateLogin, validateCreateUser } = require('./middlewares/validation');
-const { BadRequest, NotFound } = require('./errors/errors');
+const { NotFound } = require('./errors/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
@@ -29,11 +28,7 @@ db.once('open', () => {
   app.use(cookieParser());
 
   app.use(express.json());
-  app.use(BodyParser.json());
   app.use(cors());
-
-  app.all(['/users*', '/cards*'], auth);
-
   app.use(requestLogger);
 
   app.get('/crash-test', () => {
@@ -45,6 +40,7 @@ db.once('open', () => {
   app.post('/signin', validateLogin, login);
   app.post('/signup', validateCreateUser, createUser);
 
+  app.use(auth);
   app.use('/users', users);
   app.use('/cards', cards);
 
@@ -54,14 +50,6 @@ db.once('open', () => {
 
   app.use(errorLogger);
   app.use(errors());
-
-  app.use((err, req, res, next) => {
-    if (err.name === 'CastError') {
-      next(new BadRequest());
-    }
-
-    next(err);
-  });
 
   app.use((err, req, res, next) => {
     if (res.headersSent) {
